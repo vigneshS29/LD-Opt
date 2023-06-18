@@ -5,7 +5,7 @@ import numpy as np,copy,os
 import matplotlib.pyplot as plt
 
 def main():
-    #this function returns the energy and force on a particle from a harmonic potential
+    #this function returns the energy and force on a particle (Force calculated using central difference formula) 
     #potential = lambda x: (0.005)*(np.sin(x[0]) + np.sin(x[1])) + (0.05)*(x[0]**2 + x[1]**2)
     potential = lambda x: x[0]**2 + x[1]**2
     grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
