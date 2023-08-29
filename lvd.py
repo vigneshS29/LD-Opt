@@ -20,6 +20,7 @@ def main():
                                      ,max_time=10**4,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
+    
     plot_PES(potential=potential,xmin=-10,xmax=10,positions=positions)
 
     return
