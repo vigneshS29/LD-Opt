@@ -10,10 +10,16 @@ def main():
     potential = lambda x: x[0]**2 + x[1]**2
     grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
 
+    st = time.time()
+
+    grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
+
+    print('Running optimization algorithm...')
+
     times,positions,velocities = lvd(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,T=3*(10**20)\
                                      ,max_time=10**4,dt=0.1,save_frequency=10)
 
-
+    print(f'Finished in {np.round(time.time()-st,2)} seconds')
     plot_PES(potential=potential,xmin=-10,xmax=10,positions=positions)
 
     return
