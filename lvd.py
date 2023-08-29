@@ -1,14 +1,13 @@
 #Author: Vignesh Sathyaseelan
 #Email: vsathyas@purdue.edu
 
-import numpy as np,copy,os
+import numpy as np,copy,os,time
 import matplotlib.pyplot as plt
 
 def main():
     #this function returns the energy and force on a particle (Force calculated using central difference formula) 
     #potential = lambda x: (0.005)*(np.sin(x[0]) + np.sin(x[1])) + (0.05)*(x[0]**2 + x[1]**2)
     potential = lambda x: x[0]**2 + x[1]**2
-    grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
 
     st = time.time()
 
@@ -16,11 +15,10 @@ def main():
 
     print('Running optimization algorithm...')
 
-    times,positions,velocities = lvd(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,T=3*(10**20)\
-                                     ,max_time=10**4,dt=0.1,save_frequency=10)
+    times,positions,velocities = lvd(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,p0=0.5,alpha=0.1\
+                                     ,max_time=10**6,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
-    
     plot_PES(potential=potential,xmin=-10,xmax=10,positions=positions)
 
     return
@@ -36,6 +34,7 @@ def velocity_update(v,F,dt):
     return v_new
 
 def random_velocity_update(v,gamma,T,dt):
+
     kB = 1.380649 * (10**-23)
     R = np.random.normal()
     c1 = np.exp(-gamma*dt)
@@ -43,7 +42,7 @@ def random_velocity_update(v,gamma,T,dt):
     v_new = c1*v + R*c2
     return v_new
 
-def lvd(potential, gradient, gamma, T, initial_position=None, initial_velocity=None, max_time=1000, dt = 0.01, save_frequency=10):
+def lvd(potential, gradient, gamma, p0, alpha, initial_position=None, initial_velocity=None, max_time=10**5, dt = 0.01, save_frequency=10):
 
     try: os.remove('out.txt')
     except: pass
@@ -71,6 +70,10 @@ def lvd(potential, gradient, gamma, T, initial_position=None, initial_velocity=N
         
         #A
         x = position_update(x,v,dt)
+
+        #Temperature Anneal
+        T0 = 3*(10**25)
+        T = T0*(alpha**step_number)
 
         #O
         v = random_velocity_update(v,gamma,T,dt)
