@@ -109,6 +109,7 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
             step_number += 1
         
         print(f'Anneal step {anneal_step} done. Optimized to = {x}')
+        
         initial_position = x
         anneal_step += 1
         
