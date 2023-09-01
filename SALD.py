@@ -108,9 +108,10 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
             t += dt
             step_number += 1
         
+        print(f'Anneal step {anneal_step} done. Optimized to = {x}')
         initial_position = x
         anneal_step += 1
-        print(f'Anneal step {anneal_step} done. Optimized to = {initial_position}')
+        
     
     return save_times, np.array(positions), np.array(velocities)
 
