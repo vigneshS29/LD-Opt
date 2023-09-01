@@ -6,16 +6,16 @@ import matplotlib.pyplot as plt
 
 def main():
     #this function returns the energy and force on a particle (Force calculated using central difference formula) 
-    potential = lambda x: (0.05)*(np.sin(x[0]) + np.sin(x[1])) + (0.0015)*(x[0]**2 + x[1]**2)
-    #potential = lambda x: x[0]**2 + x[1]**2
+    #potential = lambda x: (x[0]**2 + x[1]**2)
+    potential = lambda x: (x[0]**2 - 10*np.cos(2*np.pi*x[0]))+ (x[1]**2 - 10*np.cos(2*np.pi*x[1]))
     initial_position=[5,5]
 
     st = time.time()
 
     grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
 
-    times,positions,velocities,temperature = sald(potential=potential,gradient=grad_p,initial_position=initial_position,gamma=10,p0=0.5,alpha=0.9\
-                                    ,initial_temp=3*(10**20),max_anneal_cycle=20,max_time=10**4,dt=0.1,save_frequency=10)
+    times,positions,velocities,temperature = sald(potential=potential,gradient=grad_p,initial_position=initial_position,gamma=1000,alpha=0.9\
+                                    ,initial_temp=3*(10**23),max_anneal_cycle=1,max_time=10**4,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
     plot_PES(potential=potential,initial_position=initial_position,xmin=-20,xmax=20,positions=positions)
@@ -42,7 +42,7 @@ def random_velocity_update(v,gamma,T,dt):
     v_new = c1*v + R*c2
     return v_new
 
-def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_velocity=None, initial_temp=3*(10**25),max_anneal_cycle=100 ,max_time=10**5, dt = 0.01, save_frequency=10):
+def sald(potential, gradient, gamma, alpha, initial_position=None, initial_velocity=None, initial_temp=3*(10**25),max_anneal_cycle=100 ,max_time=10**5, dt = 0.01, save_frequency=10):
 
     anneal_step = 1
     initial_position = initial_position
@@ -135,10 +135,10 @@ def plot_PES(potential,xmin,xmax,positions,initial_position,spacing=0.1,outname=
 def plot_temp(times,temperature,outname='temp'):
     
     plt.figure(dpi=250)
-    plt.scatter(times,np.log(temperature),alpha=0.5)
-    plt.title('Temperature vs time')
+    plt.plot(np.log(times),np.log(temperature),alpha=0.5)
+    plt.title('Annealing Profile')
     plt.ylabel('log(Temperature)')
-    plt.xlabel('Time')
+    plt.xlabel('log(Iteration)')
     plt.savefig(f'{outname}.png')
 
     return
