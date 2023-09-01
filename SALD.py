@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 def main():
     #this function returns the energy and force on a particle (Force calculated using central difference formula) 
-    #potential = lambda x: (0.05)*(np.sin(x[0]) + np.sin(x[1])) + (0.0015)*(x[0]**2 + x[1]**2)
-    potential = lambda x: x[0]**2 + x[1]**2
+    potential = lambda x: (0.05)*(np.sin(x[0]) + np.sin(x[1])) + (0.0015)*(x[0]**2 + x[1]**2)
+    #potential = lambda x: x[0]**2 + x[1]**2
     initial_position=[5,5]
 
     st = time.time()
