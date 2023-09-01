@@ -6,20 +6,19 @@ import matplotlib.pyplot as plt
 
 def main():
     #this function returns the energy and force on a particle (Force calculated using central difference formula) 
-    potential = lambda x: (0.05)*(np.sin(x[0]) + np.sin(x[1])) + (0.0015)*(x[0]**2 + x[1]**2)
-    #potential = lambda x: x[0]**2 + x[1]**2
+    #potential = lambda x: (0.05)*(np.sin(x[0]) + np.sin(x[1])) + (0.0015)*(x[0]**2 + x[1]**2)
+    potential = lambda x: x[0]**2 + x[1]**2
+    initial_position=[5,5]
 
     st = time.time()
 
     grad_p = lambda x,func,h=0.01: -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h, (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
 
-    print('Running optimization algorithm...')
-
-    times,positions,velocities,temperature = sald(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,p0=0.5,alpha=0.1\
-                                    ,initial_temp=3*(10**25),max_anneal_cycle=20,max_time=10**5,dt=0.1,save_frequency=10)
+    times,positions,velocities,temperature = sald(potential=potential,gradient=grad_p,initial_position=initial_position,gamma=10,p0=0.5,alpha=0.9\
+                                    ,initial_temp=3*(10**20),max_anneal_cycle=20,max_time=10**4,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
-    plot_PES(potential=potential,xmin=-10,xmax=10,positions=positions)
+    plot_PES(potential=potential,initial_position=initial_position,xmin=-20,xmax=20,positions=positions)
     plot_temp(times,temperature)
 
     return
@@ -53,7 +52,7 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
         
         #set initial temp for each anneal cycle
 
-        T0 = initial_temp
+        T = T0 = initial_temp
         print(f'Running anneal cycle {anneal_step}...')
 
         try: os.remove(f'out_{anneal_step}.txt')
@@ -86,7 +85,8 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
             x = position_update(x,v,dt)
 
             #Temperature Anneal
-            T = T0*(alpha**step_number)
+            #T = T0*(alpha**step_number)
+            T = T*(alpha)
 
             #O
             v = random_velocity_update(v,gamma,T,dt)
@@ -117,15 +117,15 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
         
     return np.array(save_times), np.array(positions), np.array(velocities), np.array(temperature)
 
-def plot_PES(potential,xmin,xmax,positions,spacing=0.1,outname='out'):
+def plot_PES(potential,xmin,xmax,positions,initial_position,spacing=0.1,outname='out'):
     
     plt.figure(dpi=250)
     plt.xlim(-xmax,xmax)
     plt.ylim(-xmax,xmax)
     grid_x,grid_y = np.meshgrid(np.arange(-xmax,xmax,spacing), np.arange(-xmax,xmax,spacing))
     plt.contourf(grid_x, grid_y, potential([grid_x,grid_y]))
-    plt.scatter(positions[:,0],positions[:,1],color='grey')
-    plt.scatter(positions[0,0],positions[0,1],color='black',label='Start')
+    plt.scatter(initial_position[0],initial_position[1],color='black',label='Start')
+    #plt.scatter(positions[:,0],positions[:,1],color='grey')
     plt.scatter(positions[-1,0],positions[-1,1],color='red',label='End')
     plt.legend()
     plt.savefig(f'{outname}.png')
