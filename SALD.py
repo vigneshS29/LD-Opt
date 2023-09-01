@@ -15,11 +15,12 @@ def main():
 
     print('Running optimization algorithm...')
 
-    times,positions,velocities = sald(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,p0=0.5,alpha=0.1\
+    times,positions,velocities,temperature = sald(potential=potential,gradient=grad_p,initial_position=[2,8],gamma=10,p0=0.5,alpha=0.1\
                                     ,initial_temp=3*(10**25),max_anneal_cycle=20,max_time=10**5,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
     plot_PES(potential=potential,xmin=-10,xmax=10,positions=positions)
+    plot_temp(times,temperature)
 
     return
 
@@ -59,13 +60,14 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
         except: pass
 
         with open(f'out_{anneal_step}.txt','a') as f:
-            f.write('time\tX\tY\n')
+            f.write('time\tTemperature\tX\tY\n')
 
         t = 0
         step_number = 0
         positions = []
         velocities = []
         save_times=[]
+        temperature = []
 
         if anneal_step == 0 and initial_position == None: x = np.random.normal(10,size=2)
         else: x = initial_position
@@ -101,20 +103,19 @@ def sald(potential, gradient, gamma, p0, alpha, initial_position=None, initial_v
                 positions += [x]
                 velocities += [v]
                 save_times += [t]
+                temperature += [T]
 
                 with open(f'out_{anneal_step}.txt','a') as f:
-                    f.write(f'{t:.3f}\t{x[0]:.3f}\t{x[1]:.3f}\n')
+                    f.write(f'{t:.3f}\t{T}\t{x[0]:.3f}\t{x[1]:.3f}\n')
             
             t += dt
             step_number += 1
         
         print(f'Anneal step {anneal_step} done. Optimized to = {x}')
-        
         initial_position = x
         anneal_step += 1
         
-    
-    return save_times, np.array(positions), np.array(velocities)
+    return np.array(save_times), np.array(positions), np.array(velocities), np.array(temperature)
 
 def plot_PES(potential,xmin,xmax,positions,spacing=0.1,outname='out'):
     
@@ -124,8 +125,20 @@ def plot_PES(potential,xmin,xmax,positions,spacing=0.1,outname='out'):
     grid_x,grid_y = np.meshgrid(np.arange(-xmax,xmax,spacing), np.arange(-xmax,xmax,spacing))
     plt.contourf(grid_x, grid_y, potential([grid_x,grid_y]))
     plt.scatter(positions[:,0],positions[:,1],color='grey')
-    plt.scatter(positions[0,0],positions[0,1],color='black')
-    plt.scatter(positions[-1,0],positions[-1,1],color='red')
+    plt.scatter(positions[0,0],positions[0,1],color='black',label='Start')
+    plt.scatter(positions[-1,0],positions[-1,1],color='red',label='End')
+    plt.legend()
+    plt.savefig(f'{outname}.png')
+
+    return
+
+def plot_temp(times,temperature,outname='temp'):
+    
+    plt.figure(dpi=250)
+    plt.scatter(times,np.log(temperature),alpha=0.5)
+    plt.title('Temperature vs time')
+    plt.ylabel('log(Temperature)')
+    plt.xlabel('Time')
     plt.savefig(f'{outname}.png')
 
     return
