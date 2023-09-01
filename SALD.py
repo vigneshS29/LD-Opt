@@ -123,9 +123,7 @@ def plot_PES(potential,xmin,xmax,positions,spacing=0.1,outname='out'):
     plt.ylim(-xmax,xmax)
     grid_x,grid_y = np.meshgrid(np.arange(-xmax,xmax,spacing), np.arange(-xmax,xmax,spacing))
     plt.contourf(grid_x, grid_y, potential([grid_x,grid_y]))
-  
     plt.scatter(positions[:,0],positions[:,1],color='grey')
-    
     plt.scatter(positions[0,0],positions[0,1],color='black')
     plt.scatter(positions[-1,0],positions[-1,1],color='red')
     plt.savefig(f'{outname}.png')
