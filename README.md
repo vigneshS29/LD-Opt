@@ -3,7 +3,7 @@ Combined Langevin dynamics &amp; Simulated Annealing based optimization algorith
 
 Results of a optimization run: 
 
-![]()
+![](out.png)
 
 Temperature annel curve:
 
