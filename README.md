@@ -3,7 +3,7 @@ Combined Langevin dynamics &amp; Simulated Annealing based optimization algorith
 
 Results of a optimization run on the rastrigin function: 
 
-$$ {x}_{i}^2 $$
+$$ {x}_{i}^2 + {x}_{j}^2 $$
 
 ![](out.png)
 
