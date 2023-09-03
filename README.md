@@ -3,7 +3,7 @@ Combined Langevin dynamics &amp; Simulated Annealing based optimization algorith
 
 Results of a optimization run on the rastrigin function: 
 
-$$ ({x}_{i}^2 - cos(2\pi) {x}_{i}) )+ ({x}_{j}^2 - cos(2\pi {x}_{j})) $$
+$ $ ({x}_{i}^2 - cos(2\pi) {x}_{i}) )+ ({x}_{j}^2 - cos(2\pi {x}_{j})) $ $
 
 ![](out.png)
 
