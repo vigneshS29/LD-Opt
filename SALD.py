@@ -4,16 +4,11 @@
 import numpy as np,copy,os,time
 import matplotlib.pyplot as plt
 
-def main():
-    #this function returns the energy and force on a particle (Force calculated using central difference formula) 
+def main(): 
     
-    #potential = lambda x: (x[0]**2 + x[1]**2)
 
-    sigma = 3
-    potential = lambda x:-0.3*np.exp(-((x[0] + 5.0)**2 + x[1]**2) / (2 * sigma**2)) \
-        + -0.2*np.exp(-((x[0] - 5.0)**2 + x[1]**2) / (2 * sigma**2))\
-            + -0.2*np.exp(-(x[0]**2 + (x[1] - 5.0)**2) / (2 * sigma**2))
-    
+    ##Test Case
+    potential = lambda x: (x[0]**2 + x[1]**2)
     initial_position=[5,5]
 
     st = time.time()
@@ -22,6 +17,7 @@ def main():
                                     ,initial_temp=10**12,max_anneal_cycle=100,max_time=5000,dt=0.1,save_frequency=10)
 
     print(f'Finished in {np.round(time.time()-st,2)} seconds')
+    
     plot_PES(potential=potential,initial_position=initial_position,xmin=-10,xmax=10,positions=positions)
     plot_temp(times,temperature)
 
@@ -47,6 +43,7 @@ def random_velocity_update(v,gamma,T,dt):
     return v_new
 
 def fd_grad(x,func,h=0.01):
+    #this function returns the energy and force on a particle (Force calculated using central difference formula)
     grad = -1*np.array([(func([x[0]+h,x[1]])-func([x[0]-h,x[1]]))/2*h,\
          (func([x[0],x[1]+h])-func([x[0],x[1]-h]))/2*h])
     return grad
