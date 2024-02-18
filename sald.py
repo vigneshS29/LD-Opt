@@ -4,7 +4,7 @@
 import numpy as np,copy,os,time
 import matplotlib.pyplot as plt
 
-
+from grad import *
 
 #this is step A
 def position_update(x,v,dt):
