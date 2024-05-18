@@ -1,6 +1,6 @@
-**SALD: Efficient Optimization for Deep Learning**
+**SALaD: Efficient Optimization for Deep Learning**
 
-SALD combines Langevin Dynamics (LD) and Simulated Annealing (SA) to power robust global optimization of the non-convex objective functions common in deep learning. Inspired by techniques for minimizing complex physics potentials, this package delivers an effective tool for machine learning practitioners.
+SALD combines Simulated Annealing (SA) and Langevin Dynamics (LaD) to power robust global optimization of the non-convex objective functions common in deep learning. Inspired by techniques for minimizing complex physics potentials, this package delivers an effective tool for machine learning practitioners.
 
 **Key Features**
 
