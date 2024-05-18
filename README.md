@@ -1,4 +1,4 @@
-**SALD-Opt: Efficient Optimization for Deep Learning**
+**SALD: Efficient Optimization for Deep Learning**
 
 SALD-Opt combines Langevin Dynamics (LD) and Simulated Annealing (SA) to power robust global optimization of the non-convex objective functions common in deep learning. Inspired by techniques for minimizing complex physics potentials, this package delivers an effective tool for machine learning practitioners.
 
