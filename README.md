@@ -15,3 +15,6 @@ SALD combines Simulated Annealing (SA) and Langevin Dynamics (LaD) to power robu
 * **Overcome Training Plateaus:** Break free from stagnant points during training, driving further progress.
 * **Streamlined Implementation:** Provides a ready-to-use optimization solution for your deep learning workflows.
 
+
+![Example](./example/example.png)
+
