@@ -19,7 +19,7 @@ def plot_PES(potential,xmin,xmax,positions,initial_position,spacing=0.1,outname=
 
     return
 
-def plot_temp(times,temperature,outname='temp',savefig=True):
+def plot_temp(steps,temperature,outname='temp',savefig=True):
     
     plt.figure(figsize=(5,5))
     plt.plot(times,temperature,alpha=0.5)
