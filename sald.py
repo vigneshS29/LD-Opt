@@ -25,31 +25,36 @@ def random_velocity_update(v,gamma,T,dt):
     v_new = c1*v + R*c2
     return v_new
 
-def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, initial_temp=3*(10**25),max_anneal_cycle=100 ,max_time=10**3, dt = 10**-2, save_frequency=10):
+def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, T=3*(10**25),max_anneal_cycle=100 ,max_time=10**3, dt = 10**-2, save_frequency=10):
 
-    anneal_step = 1
+    initial_temp = T
+    anneal_step = 0
+    step_number = 0
+    step_numbers = []
+    positions = []
+    velocities = []
+    save_times=[]
+    temperature = []
     initial_position = initial_position
 
-    print(f'Running SALD-OPT with initial_point = {initial_position} and intitial temp {initial_temp} for {max_anneal_cycle} anneal cycles and each cycle for {max_time}')
+    print(f'Running SALD-OPT with initial_point = {initial_position} and intitial temp {T} for {max_anneal_cycle} anneal cycles and each cycle for {max_time}')
     while anneal_step <= max_anneal_cycle:
         
-        #set initial temp for each anneal cycle
+        #set initial parameters for each anneal cycle
+        t = 0
 
-        T = T0 = initial_temp
-        print(f'Running anneal cycle {anneal_step}...')
+        #Temperature Anneal 
+        if anneal_step%5 == 0: 
+            T = initial_temp
+            initial_temp *= alpha
+
+        print(f'Running anneal cycle {anneal_step} with temperature {T}')
 
         try: os.remove(f'out_{anneal_step}.txt')
         except: pass
 
         with open(f'out_{anneal_step}.txt','a') as f:
-            f.write('time\tTemperature\tX\tY\n')
-
-        t = 0
-        step_number = 0
-        positions = []
-        velocities = []
-        save_times=[]
-        temperature = []
+            f.write('time\tTemperature\tX\tY\tVelocity\n')
 
         if anneal_step == 0 and initial_position == None: x = np.random.normal(10,size=2)
         else: x = initial_position
@@ -59,17 +64,17 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
 
         while t<max_time:
 
-            
+            #Temperature Anneal
+            if step_number%10000==0: 
+                #T = T*(np.exp(-((alpha*10)*time)))
+                T = T*alpha
+      
             # B
             potential_energy, force = potential(x),fd_grad(x,potential)
             v = velocity_update(v,force,dt)
             
             #A
             x = position_update(x,v,dt)
-
-            #Temperature Anneal
-            #T = T0*(alpha**step_number)
-            T = T0*(np.exp(-(alpha*step_number)))
 
             #O
             v = random_velocity_update(v,gamma,T,dt)
@@ -81,15 +86,15 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
             potential_energy, force = potential(x),fd_grad(x,potential)
             v = velocity_update(v,force,dt)
 
-
             if step_number%save_frequency == 0:
                 positions += [x]
                 velocities += [v]
                 save_times += [t]
                 temperature += [T]
+                step_numbers += [step_number]
 
                 with open(f'out_{anneal_step}.txt','a') as f:
-                    f.write(f'{t:.3f}\t{T}\t{x[0]:.3f}\t{x[1]:.3f}\n')
+                    f.write(f'{t:.3f}\t{T:.3}\t{x[0]:.3f}\t{x[1]:.3f}\t{str(np.round(v,5))}\n')
             
             t += dt
             step_number += 1
@@ -98,5 +103,4 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
         initial_position = x
         anneal_step += 1
         
-    return np.array(save_times), np.array(positions), np.array(velocities), np.array(temperature)
-
+    return np.array(step_numbers), np.array(positions), np.array(temperature)
