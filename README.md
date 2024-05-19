@@ -9,7 +9,7 @@ SALaD combines Simulated Annealing (SA) and Langevin Dynamics (LaD) to power rob
 * **Efficiency:** The combination of LD and SA fosters rapid exploration of parameter spaces.
 * **Deep Learning Focused:**  Tailored for optimizing  neural network models and training processes.
 
-**Why SALD-Opt?**
+**Why SALaD?**
 
 * **Improved Model Performance:**  Discover parameter configurations that may outperform  standard optimization algorithms. 
 * **Overcome Training Plateaus:** Break free from stagnant points during training, driving further progress.
