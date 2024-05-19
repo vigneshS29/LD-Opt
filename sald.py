@@ -27,6 +27,7 @@ def random_velocity_update(v,gamma,T,dt):
 
 def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, T=3*(10**25),max_anneal_cycle=100 ,max_time=10**3, dt = 10**-2, save_frequency=10):
 
+    #set initial parameters and variables
     initial_temp = T
     anneal_step = 0
     step_number = 0
