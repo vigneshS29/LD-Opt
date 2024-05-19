@@ -100,4 +100,4 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
         initial_position = x
         anneal_step += 1
         
-    return np.array(step_numbers), np.array(positions), np.array(temperature)
+    return step_numbers, positions, temperature
