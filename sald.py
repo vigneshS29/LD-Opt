@@ -33,8 +33,6 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
     step_number = 0
     step_numbers = []
     positions = []
-    velocities = []
-    save_times=[]
     temperature = []
     initial_position = initial_position
 
@@ -88,12 +86,10 @@ def sald(potential, gamma, alpha, initial_position=None, initial_velocity=None, 
             v = velocity_update(v,force,dt)
 
             if step_number%save_frequency == 0:
-                positions += [x]
-                velocities += [v]
-                save_times += [t]
-                temperature += [T]
                 step_numbers += [step_number]
-
+                positions += [x]
+                temperature += [T]
+                
                 with open(f'out_{anneal_step}.txt','a') as f:
                     f.write(f'{t:.3f}\t{T:.3}\t{x[0]:.3f}\t{x[1]:.3f}\t{str(np.round(v,5))}\n')
             
